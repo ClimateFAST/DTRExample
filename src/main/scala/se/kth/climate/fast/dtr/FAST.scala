@@ -33,7 +33,7 @@ object FAST extends Logging {
         return (meta, df)
     }
     
-    def registerUDFs(field: String, metaO: Option[Metadata])(implicit sqlContext: SQLContext): Pair[UserDefinedFunction, UserDefinedFunction] = {
+    def registerUDFs(field: String, metaO: Option[Metadata])(implicit sqlContext: SQLContext): Tuple3[UserDefinedFunction, UserDefinedFunction, UserDefinedFunction] = {
         val unit = findCalendarUnit(field, metaO);
         val year = sqlContext.udf.register("yearOf", (input: Double) => {
             unit.makeCalendarDate(input).getFieldValue(CalendarPeriod.Field.Year)
@@ -41,7 +41,10 @@ object FAST extends Logging {
         val month = sqlContext.udf.register("monthOf", (input: Double) => {
             unit.makeCalendarDate(input).getFieldValue(CalendarPeriod.Field.Month)
         })
-        (year, month)
+        val day = sqlContext.udf.register("dayOf", (input: Double) => {
+            unit.makeCalendarDate(input).getFieldValue(CalendarPeriod.Field.Day)
+        })
+        (year, month, day)
     }
 
     private def findCalendarUnit(field: String, metaO: Option[Metadata]): DateUnit = {
