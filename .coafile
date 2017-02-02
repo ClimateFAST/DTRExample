@@ -1,0 +1,4 @@
+[Default]
+bears = SpaceConsistencyBear
+files = src/main/scala/se/kth/climate/fast/*.scala
+use_spaces = false
