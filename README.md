@@ -1,2 +1,2 @@
-# DTRExample
-Diurnal Temperature Range Spark Example
+# FAST Spark Library
+A collection of classes that allow working with NetCDF files in Spark
