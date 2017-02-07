@@ -25,7 +25,7 @@ object NetCDF extends LazyLogging {
   }
 
   def rawData(path: String)(implicit sc: SparkContext): RDD[NetcdfFile] = {
-    val rdd = sc.newAPIHadoopFile[Void, NCWriteable, NetCDFFileFormat](path)
+    val rdd = sc.newAPIHadoopFile[Void, NCWritable, NetCDFFileFormat](path)
     rdd.map {
       case (_, v) => {
         val ncfile = v.get;
