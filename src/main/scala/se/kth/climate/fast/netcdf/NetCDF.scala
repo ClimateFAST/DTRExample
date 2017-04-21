@@ -4,6 +4,7 @@ import se.kth.climate.fast.common.Metadata
 import se.kth.climate.fast.netcdf.hadoop._
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
+import org.apache.spark.storage.StorageLevel
 import com.typesafe.scalalogging.LazyLogging
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
@@ -26,12 +27,15 @@ object NetCDF extends LazyLogging {
 
   def rawData(path: String)(implicit sc: SparkContext): RDD[NetcdfFile] = {
     val rdd = sc.newAPIHadoopFile[Void, NCWritable, NetCDFFileFormat](path)
-    rdd.map {
+    val ncrdd = rdd.map {
       case (_, v) => {
         val ncfile = v.get;
         //ncfile.setImmutable(); // can't write them out, so don't let anyone mutate them
         ncfile
       }
     }
+    //ncrdd.persist(StorageLevel.MEMORY_ONLY_SER);
+    ncrdd.cache();
+    ncrdd
   }
 }

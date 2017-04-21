@@ -16,7 +16,7 @@ import org.apache.hadoop.fs.Path;
 
 class FSTest extends FunSuite with Matchers with SharedSparkContext with BeforeAndAfter {
 
-  val FSIZE = 200l * 1024l * 1024l;
+  val FSIZE = 2l * 1024l * 1024l * 1024l;
 
   override def conf = {
     new SparkConf().
@@ -25,7 +25,9 @@ class FSTest extends FunSuite with Matchers with SharedSparkContext with BeforeA
       set("spark.ui.enabled", "false").
       set("spark.app.id", appID).
       set("spark.kryo.registrator", "se.kth.climate.fast.netcdf.NCKryoRegistrator").
-      set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+      set("spark.serializer", "org.apache.spark.serializer.KryoSerializer").
+      set("spark.kryoserializer.buffer.max", "512m").
+      set("spark.kryo.registrationRequired", "true")
   }
 
   private var path: String = null;
